@@ -1,3 +1,4 @@
+using BukaToko.Data;
 using BukaToko.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,11 @@ builder.Services.AddSwaggerGen();
 var constr = builder.Configuration.GetConnectionString("MyDB");
 builder.Services.AddDbContext<BukaTokoDbContext>(
     options => options.UseSqlServer(constr));
+
+builder.Services.AddControllers().AddJsonOptions(opts =>
+    opts.JsonSerializerOptions.PropertyNamingPolicy = null);
+
+builder.Services.AddScoped<IOrderRepo, OrderRepo>();
 
 var app = builder.Build();
 
