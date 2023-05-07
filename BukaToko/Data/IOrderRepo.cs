@@ -4,12 +4,12 @@ namespace BukaToko.Data
 {
     public interface IOrderRepo
     {
-       
-        Task AddOrder(Order order);
-        Task DeleteOrder(int id);
-        Task UpdateOrder(Order order);
-
-        Task<IEnumerable<Order>> GetAllOrderById();
-        Task<Order> GetOrderById();
+        Task AddToCart(string userId, int itemId, Cart cart);
+        Task DeleteFromCart(int id);
+        Task UpdateQty(int id,int qty);
+        Task Checkout();
+        Task<IEnumerable<Order>> GetAllOrderById(int id);
+        Task<Order> GetCartListById(int id);
+        Task<int> GetIdByUsername(string username);
     }
 }
