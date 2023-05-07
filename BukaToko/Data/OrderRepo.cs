@@ -14,55 +14,134 @@ namespace BukaToko.Data
             _context = context;
         }
 
-        public async Task AddToCart(string userId,int itemId,Cart cart)
+        public async Task AddToCart(int userId,Cart cart)
         {
-            //jangan lupa lepas
-            throw new NotImplementedException();
-
-
             if (cart == null)
             {
                 throw new ArgumentNullException(nameof(cart));
             }
-            var order = await _context.Orders.Where(o=>o.CartId == itemId && o.Checkout == false).FirstOrDefaultAsync();
+            //kalau order belom ada bikin baru
+            var order = await _context.Orders.Where(o=>o.UserId == userId && o.Checkout == false).FirstOrDefaultAsync();
             if (order == null)
             {
                 using (var transaction = _context.Database.BeginTransaction())
                 {
-                    await _context.Carts.AddAsync(cart);
+                    try
+                    {
+                        var tempOrder = new Order
+                        {
+                            UserId = userId,
+                            Checkout = false,
+                            Shipped = false
+                        };
+                        await _context.Orders.AddAsync(tempOrder);
+
+                        var tempCart = new Cart
+                        {
+                            OrderId = tempOrder.Id,
+                            Name = cart.Name,
+                            Price = cart.Price,
+                            Quantity = cart.Quantity,
+
+                        };
+                        await _context.Carts.AddAsync(tempCart);
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
                     
                 }
+            }
+            else
+            {
+                var tempCart = new Cart
+                {
+                    OrderId = order.Id,
+                    Name = cart.Name,
+                    Price = cart.Price,
+                    Quantity = cart.Quantity,
+
+                };
+                await _context.Carts.AddAsync(tempCart);
+                await _context.SaveChangesAsync();
             }
         }
 
         public Task Checkout()
         {
             throw new NotImplementedException();
+
         }
 
-        public Task DeleteFromCart(int id)
+        public async Task DeleteFromCart(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var cart = await GetCartById(id);
+                _context.Carts.Remove(cart);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public Task<IEnumerable<Order>> GetAllOrderById(int id)
+        public async Task<Cart> GetCartById(int id)
         {
-            throw new NotImplementedException();
+            var cart = await _context.Carts.Where(o => o.Id == id).FirstOrDefaultAsync();
+            if (cart == null)
+            {
+                throw new Exception("cart not found");
+            }
+            return cart;
         }
 
-        public Task<Order> GetCartListById(int id)
+        public async Task<List<Cart>> GetListCartByOrderId(int id)
         {
             throw new NotImplementedException();
+            var order = await _context.Orders.Where(o => o.Id == id).FirstOrDefaultAsync();
+            if (order != null)
+            {
+                var cart = await _context.Carts.Where(o => o.OrderId == order.Id).ToListAsync();
+                if (cart != null)
+                {
+                    return cart;
+                }
+                else { throw new Exception("cart not found"); }
+                
+            }
+            throw new Exception("cart not found");
+            
         }
 
-        public Task<int> GetIdByUsername(string username)
+        public async Task<int> GetUserId(string username)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            var user = await _context.Users.Where(o => o.Username == username).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                throw new Exception("user not found");
+            }
+            return user.Id;
         }
 
-        public Task UpdateQty(int id, int qty)
+        public async Task UpdateQty(int id, int qty)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var cart = await  GetCartById(id);
+                cart.Quantity = qty;
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
