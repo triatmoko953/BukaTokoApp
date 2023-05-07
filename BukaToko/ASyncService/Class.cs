@@ -1,4 +1,4 @@
-﻿namespace BukaToko.SyncService
+﻿namespace BukaToko.AsyncService
 {
     public class Class
     {
