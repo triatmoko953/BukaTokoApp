@@ -15,8 +15,6 @@ public partial class Order
 
     public bool Checkout { get; set; }
 
-    public bool Shipped { get; set; }
-
     public virtual Cart Cart { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;
