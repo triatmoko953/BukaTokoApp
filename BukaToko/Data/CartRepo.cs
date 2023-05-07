@@ -14,5 +14,9 @@ namespace BukaToko.Data
             throw new NotImplementedException();
         }
 
+        public Task<Cart> UpdateCart(Cart cart)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
