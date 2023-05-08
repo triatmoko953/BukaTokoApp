@@ -35,9 +35,9 @@ namespace BukaToko.Data
             _context.Products.Remove(product);
         }
 
-        public Task<IEnumerable<Product>> GetAll()
+        public async Task<IEnumerable<Product>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _context.Products.ToListAsync();
         }
 
         public Task<Product> GetById(int id)
