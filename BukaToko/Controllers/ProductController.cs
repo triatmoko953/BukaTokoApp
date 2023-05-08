@@ -32,5 +32,36 @@ namespace BukaToko.Controllers
 
             return Ok(product);
         }
+        [HttpGet("id/{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var product = await _product.GetById(id);
+            var readProductDto = _mapper.Map<ReadProductDto>(product);
+            return Ok(readProductDto);
+        }
+        [HttpGet("name/{name}")]
+        public async Task<IActionResult> GetByName(string name)
+        {
+            var product = await _product.GetByName(name);
+            var readProductDto = _mapper.Map<ReadProductDto>(product);
+            return Ok(readProductDto);
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, UpdateProductDto updateProductDto)
+        {
+            try
+            {
+                var product = _mapper.Map<Product>(updateProductDto);
+                product.Id = id;
+                await _product.Update(id, product);
+                _product.SaveChanges();
+                var readProductDto = _mapper.Map<ReadProductDto>(product);
+                return Ok(readProductDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -38,7 +38,7 @@ namespace BukaToko.Data
 
                         var tempCart = new Cart
                         {
-                            OrderId = tempOrder.Id,
+                            Id = tempOrder.Id,
                             Name = cart.Name,
                             Price = cart.Price,
                             Quantity = cart.Quantity,
@@ -60,7 +60,7 @@ namespace BukaToko.Data
             {
                 var tempCart = new Cart
                 {
-                    OrderId = order.Id,
+                    Id = order.Id,
                     Name = cart.Name,
                     Price = cart.Price,
                     Quantity = cart.Quantity,
@@ -107,7 +107,7 @@ namespace BukaToko.Data
             var order = await _context.Orders.Where(o => o.Id == id).FirstOrDefaultAsync();
             if (order != null)
             {
-                var cart = await _context.Carts.Where(o => o.OrderId == order.Id).ToListAsync();
+                var cart = await _context.Carts.Where(o => o.Id == order.Id).ToListAsync();
                 if (cart != null)
                 {
                     return cart;

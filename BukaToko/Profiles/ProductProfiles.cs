@@ -16,6 +16,7 @@ namespace BukaToko.Profiles
         {
             CreateMap<Product, ReadProductDto>();
             CreateMap<CreateProductDto, Product>();
+            CreateMap<UpdateProductDto, Product>();
         }
     }
 }

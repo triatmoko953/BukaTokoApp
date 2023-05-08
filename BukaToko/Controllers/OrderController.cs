@@ -40,17 +40,17 @@ namespace BukaToko.Controllers
             return Ok();
         }
 
-        [HttpGet]
-        public IActionResult Checkout()
-        {
-            return Ok();
-        }
+        //[HttpGet]
+        //public IActionResult Checkout()
+        //{
+        //    return Ok();
+        //}
 
-        [HttpGet]
-        public IActionResult ShippedOrder(int OrderId)
-        {
-            return Ok();
-        }
+        //[HttpGet]
+        //public IActionResult ShippedOrder(int OrderId)
+        //{
+        //    return Ok();
+        //}
 
     }
 }
