@@ -19,14 +19,18 @@ namespace BukaToko.Controllers
             _orderRepo = orderRepo;
         }
 
+
+        
+
         [HttpGet]
         public async Task<IActionResult> GetOrder()
         {
-            var tempName = "akun1";
-            var userId = await _orderRepo.GetUserId(tempName);
-            if (userId == null) return BadRequest("user not found");
-            var listCart = await _orderRepo.GetListCartUser(userId.Value);
-            return Ok(listCart);
+                var tempName = "akun1";
+                var userId = await _orderRepo.GetUserId(tempName);
+                if (userId == null) return BadRequest("user not found");
+
+                var listCart = await _orderRepo.GetListCartUser(userId.Value);
+                return Ok(listCart);
         }
 
         [HttpPost]

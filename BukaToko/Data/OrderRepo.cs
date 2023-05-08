@@ -1,4 +1,5 @@
-﻿using BukaToko.Models;
+﻿using BukaToko.DTOS;
+using BukaToko.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
@@ -104,7 +105,7 @@ namespace BukaToko.Data
             return null;
         }
 
-        public async Task<List<Cart>?> GetListCartUser(int userId)
+        public async Task<List<ReadCartDto>?> GetListCartUser(int userId)
         {
             var order = await _context.Orders.Where(o => o.UserId == userId).FirstOrDefaultAsync();
             if (order != null)
@@ -112,7 +113,17 @@ namespace BukaToko.Data
                 var cart = await _context.Carts.Where(o => o.Id == order.Id).ToListAsync();
                 if (cart != null)
                 {
-                    return cart;
+                    var temp = new List<ReadCartDto>();
+                    foreach (var item in cart)
+                    {
+                        temp.Add(new ReadCartDto
+                        {
+                            Name = item.Name,
+                            Price = item.Price,
+                            Quantity = item.Quantity,
+                        });
+                    }
+                    return temp;
                 }
             }
             return null;

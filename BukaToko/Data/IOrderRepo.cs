@@ -1,4 +1,5 @@
-﻿using BukaToko.Models;
+﻿using BukaToko.DTOS;
+using BukaToko.Models;
 
 namespace BukaToko.Data
 {
@@ -10,6 +11,6 @@ namespace BukaToko.Data
         Task Checkout();
         Task<int?> GetUserId(string username);
         Task<Cart?> GetCartById(int id);
-        Task<List<Cart>?> GetListCartUser(int userId);
+        Task<List<ReadCartDto>?> GetListCartUser(int userId);
     }
 }
