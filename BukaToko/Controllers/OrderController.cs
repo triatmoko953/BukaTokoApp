@@ -20,17 +20,29 @@ namespace BukaToko.Controllers
         }
 
 
-        
 
+        //list order buat manager
         [HttpGet]
         public async Task<IActionResult> GetOrder()
         {
-                var tempName = "akun1";
-                var userId = await _orderRepo.GetUserId(tempName);
-                if (userId == null) return BadRequest("user not found");
+            //var tempName = "akun1";
+            //var userId = await _orderRepo.GetUserId(tempName);
+            //if (userId == null) return BadRequest("user not found");
 
-                var listCart = await _orderRepo.GetListCartUser(userId.Value);
-                return Ok(listCart);
+            //var listCart = await _orderRepo.GetListCartUser(userId.Value);
+            //return Ok(listCart);
+            return Ok();
+        }
+
+        [HttpGet("Cart")]
+        public async Task<IActionResult> GetCart()
+        {
+            var tempName = "akun1";
+            var userId = await _orderRepo.GetUserId(tempName);
+            if (userId == null) return BadRequest("user not found");
+
+            var listCart = await _orderRepo.GetListCartUser(userId.Value);
+            return Ok(listCart);
         }
 
         [HttpPost]
@@ -43,7 +55,7 @@ namespace BukaToko.Controllers
 
             //pake userId.Value karna return nya nullable.
             //cant convert int? -> int
-            //await _orderRepo.AddToCart(userId.Value, new Cart { Name = "laptop", Price = 500, Quantity = 1 });
+            await _orderRepo.AddToCart(userId.Value, new Cart { Name = "laptop", Price = 500, Quantity = 1 });
             return Ok();
 
         }
