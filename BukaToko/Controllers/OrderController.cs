@@ -76,7 +76,13 @@ namespace BukaToko.Controllers
 
             //pake userId.Value karna return nya nullable.
             //cant convert int? -> int
-            await _orderRepo.AddToCart(userId.Value, new Cart { Name = "laptop", Price = 500, Quantity = 1 });
+
+            var cart = new Cart
+            {
+                Id = productId, 
+                Quantity = qty
+            };
+            await _orderRepo.AddToCart(userId.Value, cart);
             return Ok();
 
         }
