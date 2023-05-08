@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 
+
+//TODO: kelarin GetAllOrder
 namespace BukaToko.Data
 {
     public class OrderRepo : IOrderRepo

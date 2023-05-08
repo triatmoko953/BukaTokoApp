@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 //TODO: ganti tempname sama user dari jwt nanti
 //TODO: ganti input nama barang dengan nama dari id produk di AddCart()
-
+//TODO: kelarin GetOrder()
 
 namespace BukaToko.Controllers
 {
