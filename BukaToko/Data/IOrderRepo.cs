@@ -8,8 +8,8 @@ namespace BukaToko.Data
         Task DeleteFromCart(int id);
         Task UpdateQty(int id,int qty);
         Task Checkout();
-        Task<int> GetUserId(string username);
-        Task<Cart> GetCartById(int id);
-        Task<List<Cart>> GetListCartByOrderId(int id);
+        Task<int?> GetUserId(string username);
+        Task<Cart?> GetCartById(int id);
+        Task<List<Cart>?> GetListCartByOrderId(int id);
     }
 }

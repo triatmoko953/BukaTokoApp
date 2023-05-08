@@ -22,6 +22,7 @@ namespace BukaToko.Data
             }
             //kalau order belom ada bikin baru
             var order = await _context.Orders.Where(o=>o.UserId == userId && o.Checkout == false).FirstOrDefaultAsync();
+
             if (order == null)
             {
                 using (var transaction = _context.Database.BeginTransaction())
@@ -35,7 +36,9 @@ namespace BukaToko.Data
                             Shipped = false
                         };
                         await _context.Orders.AddAsync(tempOrder);
+                        await _context.SaveChangesAsync();
 
+                        var t = tempOrder;
                         var tempCart = new Cart
                         {
                             Id = tempOrder.Id,
@@ -91,19 +94,18 @@ namespace BukaToko.Data
             }
         }
 
-        public async Task<Cart> GetCartById(int id)
+        public async Task<Cart?> GetCartById(int id)
         {
             var cart = await _context.Carts.Where(o => o.Id == id).FirstOrDefaultAsync();
-            if (cart == null)
+            if (cart != null)
             {
-                throw new Exception("cart not found");
+                return cart;
             }
-            return cart;
+            return null;
         }
 
-        public async Task<List<Cart>> GetListCartByOrderId(int id)
+        public async Task<List<Cart>?> GetListCartByOrderId(int id)
         {
-            throw new NotImplementedException();
             var order = await _context.Orders.Where(o => o.Id == id).FirstOrDefaultAsync();
             if (order != null)
             {
@@ -112,20 +114,17 @@ namespace BukaToko.Data
                 {
                     return cart;
                 }
-                else { throw new Exception("cart not found"); }
-                
             }
-            throw new Exception("cart not found");
-            
+            return null;
         }
 
-        public async Task<int> GetUserId(string username)
+        public async Task<int?> GetUserId(string username)
         {
             //throw new NotImplementedException();
             var user = await _context.Users.Where(o => o.Username == username).FirstOrDefaultAsync();
             if (user == null)
             {
-                throw new Exception("user not found");
+                return null;
             }
             return user.Id;
         }
