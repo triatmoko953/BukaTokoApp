@@ -65,9 +65,22 @@ namespace BukaToko.Data
             return (_context.SaveChanges() >= 0);
         }
 
-        public Task Update(int id, Product product)
+        public async Task Update(int id, Product product)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var existingProduct = await GetById(product.Id);
+
+                existingProduct.Name = product.Name;
+                existingProduct.Description = product.Description;
+                existingProduct.Price = product.Price;
+                existingProduct.Stock = product.Stock;
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }
