@@ -83,14 +83,19 @@ namespace BukaToko.Data
 
         public async Task DeleteFromCart(int userId, int id)
         {
-            
+
             //check id exist
-            var item = await _context.Carts.Where(o=> o.Order.UserId == userId && o.Id == id).FirstOrDefaultAsync();
-            if (item != null)
+            var temp = await GetListCartUser(userId);
+            if (temp != null)
             {
-                _context.Carts.Remove(item);
+                var item = temp.Find(o => o.Id == id);
+                if (item != null)
+                {
+                    _context.Carts.Remove(item);
+                }
+                await _context.SaveChangesAsync();
             }
-            await _context.SaveChangesAsync();
+            
         }
 
         public async Task<Cart?> GetCartById(int id)
@@ -103,30 +108,40 @@ namespace BukaToko.Data
             return null;
         }
 
-        public async Task<List<ReadCartDto>?> GetListCartUser(int userId)
+        public async Task<List<Cart>?> GetListCartUser(int userId)
         {
-            var order = await _context.Orders.Where(o => o.UserId == userId && o.Checkout == false).FirstOrDefaultAsync();
-            if (order != null)
+            var listItem = await _context.Carts.Where(o => o.Order.UserId == userId).ToListAsync();
+            
+            if (listItem != null)
             {
-                var cart = await _context.Carts.Where(o => o.OrderId == order.Id).ToListAsync();
-                if (cart != null)
-                {
-                    var temp = new List<ReadCartDto>();
-                    foreach (var item in cart)
-                    {
-                        temp.Add(new ReadCartDto
-                        {
-                            Id = item.Id,
-                            Name = item.Name,
-                            Price = item.Price,
-                            Quantity = item.Quantity,
-                        });
-                    }
-                    return temp;
-                }
-                else { return null; }
+                return listItem;
             }
-            return null;
+            else return null;
+
+
+
+            //var order = await _context.Orders.Where(o => o.UserId == userId && o.Checkout == false).FirstOrDefaultAsync();
+            //if (order != null)
+            //{
+            //    var cart = await _context.Carts.Where(o => o.OrderId == order.Id).ToListAsync();
+            //    if (cart != null)
+            //    {
+            //        var temp = new List<ReadCartDto>();
+            //        foreach (var item in cart)
+            //        {
+            //            temp.Add(new ReadCartDto
+            //            {
+            //                Id = item.Id,
+            //                Name = item.Name,
+            //                Price = item.Price,
+            //                Quantity = item.Quantity,
+            //            });
+            //        }
+            //        return temp;
+            //    }
+            //    else { return null; }
+            //}
+            //return null;
         }
 
         public async Task<int?> GetUserId(string username)

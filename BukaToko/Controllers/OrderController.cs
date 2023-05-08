@@ -5,6 +5,8 @@ using HotChocolate.Authorization;
 using System.Security.Claims;
 using BukaToko.DTO;
 using BukaToko.Models;
+using BukaToko.DTOS;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 
 //TODO: ganti tempname sama user dari jwt nanti
@@ -44,10 +46,23 @@ namespace BukaToko.Controllers
         {
             var tempName = "akun1";
             var userId = await _orderRepo.GetUserId(tempName);
-            if (userId == null) return BadRequest("user not found");
+            if (userId == null) return NotFound("user not found");
 
             var listCart = await _orderRepo.GetListCartUser(userId.Value);
-            return Ok(listCart);
+            if (listCart == null) return Ok(null);
+
+            var temp = new List<ReadCartDto>();
+            foreach (var item in listCart)
+            {
+                temp.Add(new ReadCartDto
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    Price = item.Price,
+                    Quantity = item.Quantity,
+                });
+            }
+            return Ok(temp);
         }
 
         [HttpPost]
