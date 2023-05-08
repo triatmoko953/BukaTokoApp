@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using HotChocolate.Authorization;
 using System.Security.Claims;
-using BukaToko.DTO;
+using BukaToko.DTOS;
 using BukaToko.Models;
 
 namespace BukaToko.Controllers

@@ -94,6 +94,11 @@ namespace BukaToko.Data
             }
         }
 
+        public async Task<IEnumerable<Cart>> GetAll()
+        {
+            return await _context.Carts.ToListAsync();
+        }
+
         public async Task<Cart?> GetCartById(int id)
         {
             var cart = await _context.Carts.Where(o => o.Id == id).FirstOrDefaultAsync();
@@ -133,7 +138,7 @@ namespace BukaToko.Data
         {
             try
             {
-                var cart = await  GetCartById(id);
+                var cart = await GetCartById(id);
                 cart.Quantity = qty;
                 await _context.SaveChangesAsync();
             }
