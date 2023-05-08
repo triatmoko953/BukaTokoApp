@@ -81,18 +81,16 @@ namespace BukaToko.Data
 
         }
 
-        public async Task DeleteFromCart(int id)
+        public async Task DeleteFromCart(int userId, int id)
         {
-            try
+            
+            //check id exist
+            var item = await _context.Carts.Where(o=> o.Order.UserId == userId && o.Id == id).FirstOrDefaultAsync();
+            if (item != null)
             {
-                var cart = await GetCartById(id);
-                _context.Carts.Remove(cart);
-                await _context.SaveChangesAsync();
+                _context.Carts.Remove(item);
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Cart?> GetCartById(int id)
@@ -107,7 +105,7 @@ namespace BukaToko.Data
 
         public async Task<List<ReadCartDto>?> GetListCartUser(int userId)
         {
-            var order = await _context.Orders.Where(o => o.UserId == userId).FirstOrDefaultAsync();
+            var order = await _context.Orders.Where(o => o.UserId == userId && o.Checkout == false).FirstOrDefaultAsync();
             if (order != null)
             {
                 var cart = await _context.Carts.Where(o => o.OrderId == order.Id).ToListAsync();
@@ -118,6 +116,7 @@ namespace BukaToko.Data
                     {
                         temp.Add(new ReadCartDto
                         {
+                            Id = item.Id,
                             Name = item.Name,
                             Price = item.Price,
                             Quantity = item.Quantity,
@@ -125,6 +124,7 @@ namespace BukaToko.Data
                     }
                     return temp;
                 }
+                else { return null; }
             }
             return null;
         }
@@ -142,15 +142,11 @@ namespace BukaToko.Data
 
         public async Task UpdateQty(int id, int qty)
         {
-            try
+            var cart = await GetCartById(id);
+            if (cart != null)
             {
-                var cart = await  GetCartById(id);
                 cart.Quantity = qty;
                 await _context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                throw;
             }
         }
     }

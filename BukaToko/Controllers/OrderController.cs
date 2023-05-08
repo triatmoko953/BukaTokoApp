@@ -6,6 +6,11 @@ using System.Security.Claims;
 using BukaToko.DTO;
 using BukaToko.Models;
 
+
+//TODO: ganti tempname sama user dari jwt nanti
+
+
+
 namespace BukaToko.Controllers
 {
     [Route("api/[controller]")]
@@ -48,7 +53,7 @@ namespace BukaToko.Controllers
         [HttpPost]
         public async Task<IActionResult> AddToCart(int productId,int qty)
         {
-            //TODO: ganti tempname sama user dari jwt nanti
+            
             var tempName = "akun1";
             var userId = await _orderRepo.GetUserId(tempName);
             if (userId == null) return BadRequest("user not found");
@@ -60,14 +65,26 @@ namespace BukaToko.Controllers
 
         }
         [HttpPut("{id}")]
-        public IActionResult UpdateQty(int CartId, int qty)
+        public async Task<IActionResult> UpdateQty(int id, int qty)
         {
+            var cart = await _orderRepo.GetCartById(id);
+            if (cart == null) return BadRequest("Cart not found");
+
+            await _orderRepo.UpdateQty(cart.Id, qty);
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteFromCart(int CartId)
+        public async Task<IActionResult> DeleteFromCart(int id)
         {
+            var tempName = "akun1";
+            var userId = await _orderRepo.GetUserId(tempName);
+            if (userId == null) return BadRequest("user not found");
+
+            var cart = await _orderRepo.GetCartById(id);
+            if (cart == null) return BadRequest("Cart not found");
+
+            await _orderRepo.DeleteFromCart(userId.Value,cart.Id);
             return Ok();
         }
 

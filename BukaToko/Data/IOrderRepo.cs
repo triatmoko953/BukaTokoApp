@@ -6,7 +6,7 @@ namespace BukaToko.Data
     public interface IOrderRepo
     {
         Task AddToCart(int userId, Cart cart);
-        Task DeleteFromCart(int id);
+        Task DeleteFromCart(int userId,int id);
         Task UpdateQty(int id,int qty);
         Task Checkout();
         Task<int?> GetUserId(string username);
