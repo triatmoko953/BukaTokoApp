@@ -20,6 +20,7 @@ namespace BukaToko.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderRepo _orderRepo;
+        private string tempName = "akun2";
 
         public OrderController(IOrderRepo orderRepo)
         {
@@ -44,7 +45,7 @@ namespace BukaToko.Controllers
         [HttpGet("Cart")]
         public async Task<IActionResult> GetCart()
         {
-            var tempName = "akun1";
+            //var tempName = "akun1";
             var userId = await _orderRepo.GetUserId(tempName);
             if (userId == null) return NotFound("user not found");
 
@@ -69,7 +70,7 @@ namespace BukaToko.Controllers
         public async Task<IActionResult> AddToCart(int productId,int qty)
         {
             
-            var tempName = "akun1";
+            //var tempName = "akun1";
             var userId = await _orderRepo.GetUserId(tempName);
             if (userId == null) return BadRequest("user not found");
 
@@ -82,21 +83,24 @@ namespace BukaToko.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateQty(int id, int qty)
         {
-            var cart = await _orderRepo.GetCartById(id);
+            var userId = await _orderRepo.GetUserId(tempName);
+            if (userId == null) return BadRequest("user not found");
+
+            var cart = await _orderRepo.GetCartById(userId.Value,id);
             if (cart == null) return BadRequest("Cart not found");
 
-            await _orderRepo.UpdateQty(cart.Id, qty);
+            await _orderRepo.UpdateQty(userId.Value,cart.Id, qty);
             return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFromCart(int id)
         {
-            var tempName = "akun1";
+            //var tempName = "akun1";
             var userId = await _orderRepo.GetUserId(tempName);
             if (userId == null) return BadRequest("user not found");
 
-            var cart = await _orderRepo.GetCartById(id);
+            var cart = await _orderRepo.GetCartById(userId.Value, id);
             if (cart == null) return BadRequest("Cart not found");
 
             await _orderRepo.DeleteFromCart(userId.Value,cart.Id);

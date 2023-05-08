@@ -98,12 +98,16 @@ namespace BukaToko.Data
             
         }
 
-        public async Task<Cart?> GetCartById(int id)
+        public async Task<Cart?> GetCartById(int userId, int id)
         {
-            var cart = await _context.Carts.Where(o => o.Id == id).FirstOrDefaultAsync();
-            if (cart != null)
+            var temp = await GetListCartUser(userId);
+            if (temp != null)
             {
-                return cart;
+                var item = temp.Find(o => o.Id == id);
+                if (item != null)
+                {
+                    return item;
+                }
             }
             return null;
         }
@@ -155,9 +159,9 @@ namespace BukaToko.Data
             return user.Id;
         }
 
-        public async Task UpdateQty(int id, int qty)
+        public async Task UpdateQty(int userId, int id, int qty)
         {
-            var cart = await GetCartById(id);
+            var cart = await GetCartById(userId,id);
             if (cart != null)
             {
                 cart.Quantity = qty;
