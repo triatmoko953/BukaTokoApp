@@ -9,6 +9,6 @@ namespace BukaToko.DTO
         [Required]
         public int Price { get; set; }
         [Required]
-        public int Quantity { get; set; }
+        public int Qty { get; set; }
     }
 }
