@@ -105,10 +105,10 @@ namespace BukaToko.Data
             
         }
 
-        public async Task<List<Order>?> GetAllOrder()
+        public async Task<IEnumerable<Order>?> GetAllOrder()
         {
-            throw new NotImplementedException();
-            
+            return await _context.Orders.ToListAsync();
+
         }
 
         public async Task<Cart?> GetCartById(int userId, int id)

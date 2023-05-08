@@ -63,5 +63,20 @@ namespace BukaToko.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _product.Delete(id);
+                _product.SaveChanges();
+                return Ok(new { message = $"Product with Id ({id}) has been deleted." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

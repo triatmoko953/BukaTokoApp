@@ -7,6 +7,7 @@ using BukaToko.DTOS;
 using BukaToko.Models;
 using BukaToko.DTOS;
 using Microsoft.EntityFrameworkCore.Metadata;
+using AutoMapper;
 
 
 //TODO: ganti tempname sama user dari jwt nanti
@@ -20,20 +21,25 @@ namespace BukaToko.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderRepo _orderRepo;
+        private readonly IMapper _mapper;
         private string tempName = "akun1";
 
-        public OrderController(IOrderRepo orderRepo)
+        public OrderController(IOrderRepo orderRepo, IMapper mapper)
         {
             _orderRepo = orderRepo;
+            _mapper = mapper;
         }
 
 
 
         //list order buat manager
         [HttpGet]
-        public async Task<IActionResult> GetOrder()
+        public async Task<ActionResult<IEnumerable<ReadOrderDto>>> GetAllOrder()
         {
-            return Ok();
+
+            var orders = await _orderRepo.GetAllOrder();
+            var listorder = _mapper.Map<IEnumerable<ReadOrderDto>>(orders);
+            return Ok(listorder);
         }
 
         [HttpGet("Cart")]

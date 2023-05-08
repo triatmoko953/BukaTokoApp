@@ -10,9 +10,10 @@ namespace BukaToko.Data
         Task UpdateQty(int userId,int id,int qty);
         Task Checkout(int userId);
         Task Shipped(int orderId);
-        Task<List<Order>?> GetAllOrder();
+        Task<IEnumerable<Order>?> GetAllOrder();
         Task<int?> GetUserId(string username);
         Task<Cart?> GetCartById(int userId,int id);
         Task<List<Cart>?> GetListCartUser(int userId);
+
     }
 }
