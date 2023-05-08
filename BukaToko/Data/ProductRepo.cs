@@ -50,9 +50,14 @@ namespace BukaToko.Data
             return product;
         }
 
-        public Task<Product> GetByName(string name)
+        public async Task<Product> GetByName(string name)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Name == name);
+            if (product == null)
+            {
+                throw new Exception("Product not found");
+            }
+            return product;
         }
 
         public bool SaveChanges()
