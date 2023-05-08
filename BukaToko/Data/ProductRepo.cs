@@ -25,9 +25,14 @@ namespace BukaToko.Data
             _context.Products.Add(product);
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            if (product == null)
+            {
+                throw new Exception("Product not found");
+            }
+            _context.Products.Remove(product);
         }
 
         public Task<IEnumerable<Product>> GetAll()
