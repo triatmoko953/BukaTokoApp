@@ -6,6 +6,8 @@ namespace BukaToko.Data
     {
         Task<Cart> CreateCart(Cart cart);
         Task<Cart> UpdateCart(Cart cart);
+        Task<Cart> GetById(int id);
         Task<IEnumerable<Cart>> GetAll();
+        bool SaveChanges();
     }
 }
