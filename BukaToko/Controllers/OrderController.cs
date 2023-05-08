@@ -33,12 +33,6 @@ namespace BukaToko.Controllers
         [HttpGet]
         public async Task<IActionResult> GetOrder()
         {
-            //var tempName = "akun1";
-            //var userId = await _orderRepo.GetUserId(tempName);
-            //if (userId == null) return BadRequest("user not found");
-
-            //var listCart = await _orderRepo.GetListCartUser(userId.Value);
-            //return Ok(listCart);
             return Ok();
         }
 
@@ -116,11 +110,12 @@ namespace BukaToko.Controllers
             return Ok();
         }
 
-        //[HttpGet]
-        //public IActionResult ShippedOrder(int OrderId)
-        //{
-        //    return Ok();
-        //}
+        [HttpGet("ShippedOrder")]
+        public async Task<IActionResult> ShippedOrder(int OrderId)
+        {
+            await _orderRepo.Shipped(OrderId);
+            return Ok();
+        }
 
     }
 }

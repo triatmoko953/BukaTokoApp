@@ -77,10 +77,13 @@ namespace BukaToko.Data
 
         public async Task Checkout(int userId)
         {
-            //throw new NotImplementedException();
             var order = await _context.Orders.Where(o => o.UserId==userId && o.Checkout==false ).FirstOrDefaultAsync();
-            order.Checkout = true;
-            await _context.SaveChangesAsync();
+            if (order!=null)
+            {
+                order.Checkout = true;
+                await _context.SaveChangesAsync();
+            }
+            
         }
 
         public async Task DeleteFromCart(int userId, int id)
@@ -97,6 +100,12 @@ namespace BukaToko.Data
                 }
                 await _context.SaveChangesAsync();
             }
+            
+        }
+
+        public async Task<List<Order>?> GetAllOrder()
+        {
+            throw new NotImplementedException();
             
         }
 
@@ -123,31 +132,6 @@ namespace BukaToko.Data
                 return listItem;
             }
             else return null;
-
-
-
-            //var order = await _context.Orders.Where(o => o.UserId == userId && o.Checkout == false).FirstOrDefaultAsync();
-            //if (order != null)
-            //{
-            //    var cart = await _context.Carts.Where(o => o.OrderId == order.Id).ToListAsync();
-            //    if (cart != null)
-            //    {
-            //        var temp = new List<ReadCartDto>();
-            //        foreach (var item in cart)
-            //        {
-            //            temp.Add(new ReadCartDto
-            //            {
-            //                Id = item.Id,
-            //                Name = item.Name,
-            //                Price = item.Price,
-            //                Quantity = item.Quantity,
-            //            });
-            //        }
-            //        return temp;
-            //    }
-            //    else { return null; }
-            //}
-            //return null;
         }
 
         public async Task<int?> GetUserId(string username)
@@ -159,6 +143,16 @@ namespace BukaToko.Data
                 return null;
             }
             return user.Id;
+        }
+
+        public async Task Shipped(int orderId)
+        {
+            var order = await _context.Orders.Where(o => o.Shipped == false && o.Checkout == true).FirstOrDefaultAsync();
+            if(order != null)
+            {
+                order.Shipped = true;
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task UpdateQty(int userId, int id, int qty)
