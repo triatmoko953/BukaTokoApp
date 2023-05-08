@@ -10,7 +10,7 @@ namespace BukaToko.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
-    {
+    { 
         private readonly IProductRepo _product;
         private readonly IMapper _mapper;
         //private readonly IMessageBusClient _messageBusClient;
