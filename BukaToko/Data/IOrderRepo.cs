@@ -8,7 +8,7 @@ namespace BukaToko.Data
         Task AddToCart(int userId, Cart cart);
         Task DeleteFromCart(int userId,int id);
         Task UpdateQty(int userId,int id,int qty);
-        Task Checkout();
+        Task Checkout(int userId);
         Task<int?> GetUserId(string username);
         Task<Cart?> GetCartById(int userId,int id);
         Task<List<Cart>?> GetListCartUser(int userId);

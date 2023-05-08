@@ -75,10 +75,12 @@ namespace BukaToko.Data
             }
         }
 
-        public Task Checkout()
+        public async Task Checkout(int userId)
         {
-            throw new NotImplementedException();
-
+            //throw new NotImplementedException();
+            var order = await _context.Orders.Where(o => o.UserId==userId && o.Checkout==false ).FirstOrDefaultAsync();
+            order.Checkout = true;
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteFromCart(int userId, int id)
@@ -114,7 +116,7 @@ namespace BukaToko.Data
 
         public async Task<List<Cart>?> GetListCartUser(int userId)
         {
-            var listItem = await _context.Carts.Where(o => o.Order.UserId == userId).ToListAsync();
+            var listItem = await _context.Carts.Where(o => o.Order.UserId == userId && o.Order.Checkout == false).ToListAsync();
             
             if (listItem != null)
             {

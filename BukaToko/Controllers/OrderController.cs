@@ -20,7 +20,7 @@ namespace BukaToko.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderRepo _orderRepo;
-        private string tempName = "akun2";
+        private string tempName = "akun1";
 
         public OrderController(IOrderRepo orderRepo)
         {
@@ -107,11 +107,14 @@ namespace BukaToko.Controllers
             return Ok();
         }
 
-        //[HttpGet()]
-        //public IActionResult Checkout()
-        //{
-        //    return Ok();
-        //}
+        [HttpGet("checkout")]
+        public async Task<IActionResult> Checkout()
+        {
+            var userId = await _orderRepo.GetUserId(tempName);
+            if (userId == null) return BadRequest("user not found");
+            await _orderRepo.Checkout(userId.Value);
+            return Ok();
+        }
 
         //[HttpGet]
         //public IActionResult ShippedOrder(int OrderId)
