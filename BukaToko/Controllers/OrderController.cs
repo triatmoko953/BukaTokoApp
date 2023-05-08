@@ -25,13 +25,14 @@ namespace BukaToko.Controllers
             var tempName = "akun1";
             var userId = await _orderRepo.GetUserId(tempName);
             if (userId == null) return BadRequest("user not found");
-
-            return Ok();
+            var listCart = await _orderRepo.GetListCartUser(userId.Value);
+            return Ok(listCart);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddToCart(int productId,int qty)
         {
+            //TODO: ganti tempname sama user dari jwt nanti
             var tempName = "akun1";
             var userId = await _orderRepo.GetUserId(tempName);
             if (userId == null) return BadRequest("user not found");

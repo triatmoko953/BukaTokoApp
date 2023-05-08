@@ -10,6 +10,6 @@ namespace BukaToko.Data
         Task Checkout();
         Task<int?> GetUserId(string username);
         Task<Cart?> GetCartById(int id);
-        Task<List<Cart>?> GetListCartByOrderId(int id);
+        Task<List<Cart>?> GetListCartUser(int userId);
     }
 }

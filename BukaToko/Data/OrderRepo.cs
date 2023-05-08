@@ -104,9 +104,9 @@ namespace BukaToko.Data
             return null;
         }
 
-        public async Task<List<Cart>?> GetListCartByOrderId(int id)
+        public async Task<List<Cart>?> GetListCartUser(int userId)
         {
-            var order = await _context.Orders.Where(o => o.Id == id).FirstOrDefaultAsync();
+            var order = await _context.Orders.Where(o => o.UserId == userId).FirstOrDefaultAsync();
             if (order != null)
             {
                 var cart = await _context.Carts.Where(o => o.Id == order.Id).ToListAsync();
