@@ -1,16 +1,18 @@
-﻿using BukaToko.Models;
+﻿using BukaToko.DTOS;
+using BukaToko.Models;
 
 namespace BukaToko.Data
 {
     public interface IOrderRepo
     {
         Task AddToCart(int userId, Cart cart);
-        Task DeleteFromCart(int id);
-        Task UpdateQty(int id,int qty);
-        Task Checkout();
+        Task DeleteFromCart(int userId,int id);
+        Task UpdateQty(int userId,int id,int qty);
+        Task Checkout(int userId);
+        Task Shipped(int orderId);
+        Task<List<Order>?> GetAllOrder();
         Task<int?> GetUserId(string username);
-        Task<Cart?> GetCartById(int id);
-        Task<List<Cart>?> GetListCartByOrderId(int id);
-        Task<IEnumerable<Cart>> GetAll();
+        Task<Cart?> GetCartById(int userId,int id);
+        Task<List<Cart>?> GetListCartUser(int userId);
     }
 }
