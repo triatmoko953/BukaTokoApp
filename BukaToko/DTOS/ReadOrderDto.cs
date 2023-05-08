@@ -2,15 +2,15 @@
 
 namespace BukaToko.DTOS
 {
-    public class ReadCartDto
+    public class ReadOrderDto
     {
         [Required]
         public int Id { get; set; }
         [Required]
-        public string Name { get; set; }
+        public int UserId { get; set; }
         [Required]
-        public int Price { get; set; }
+        public bool Shipped { get; set; }
         [Required]
-        public int Quantity { get; set; }
+        public bool Checkout { get; set; }
     }
 }

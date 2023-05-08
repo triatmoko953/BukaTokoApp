@@ -1,8 +1,11 @@
-﻿using BukaToko.Models;
+﻿using BukaToko.DTOS;
+using BukaToko.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 
+
+//TODO: kelarin GetAllOrder
 namespace BukaToko.Data
 {
     public class OrderRepo : IOrderRepo
@@ -41,7 +44,7 @@ namespace BukaToko.Data
                         var t = tempOrder;
                         var tempCart = new Cart
                         {
-                            Id = tempOrder.Id,
+                            OrderId = tempOrder.Id,
                             Name = cart.Name,
                             Price = cart.Price,
                             Quantity = cart.Quantity,
@@ -62,7 +65,7 @@ namespace BukaToko.Data
             {
                 var tempCart = new Cart
                 {
-                    Id = order.Id,
+                    OrderId = order.Id,
                     Name = cart.Name,
                     Price = cart.Price,
                     Quantity = cart.Quantity,
@@ -73,48 +76,63 @@ namespace BukaToko.Data
             }
         }
 
-        public Task Checkout()
+        public async Task Checkout(int userId)
         {
-            throw new NotImplementedException();
-
-        }
-
-        public async Task DeleteFromCart(int id)
-        {
-            try
+            var order = await _context.Orders.Where(o => o.UserId==userId && o.Checkout==false ).FirstOrDefaultAsync();
+            if (order!=null)
             {
-                var cart = await GetCartById(id);
-                _context.Carts.Remove(cart);
+                order.Checkout = true;
                 await _context.SaveChangesAsync();
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            
         }
 
-        public async Task<Cart?> GetCartById(int id)
+        public async Task DeleteFromCart(int userId, int id)
         {
-            var cart = await _context.Carts.Where(o => o.Id == id).FirstOrDefaultAsync();
-            if (cart != null)
-            {
-                return cart;
-            }
-            return null;
-        }
 
-        public async Task<List<Cart>?> GetListCartByOrderId(int id)
-        {
-            var order = await _context.Orders.Where(o => o.Id == id).FirstOrDefaultAsync();
-            if (order != null)
+            //check id exist
+            var temp = await GetListCartUser(userId);
+            if (temp != null)
             {
-                var cart = await _context.Carts.Where(o => o.Id == order.Id).ToListAsync();
-                if (cart != null)
+                var item = temp.Find(o => o.Id == id);
+                if (item != null)
                 {
-                    return cart;
+                    _context.Carts.Remove(item);
+                }
+                await _context.SaveChangesAsync();
+            }
+            
+        }
+
+        public async Task<IEnumerable<Order>?> GetAllOrder()
+        {
+            return await _context.Orders.ToListAsync();
+
+        }
+
+        public async Task<Cart?> GetCartById(int userId, int id)
+        {
+            var temp = await GetListCartUser(userId);
+            if (temp != null)
+            {
+                var item = temp.Find(o => o.Id == id);
+                if (item != null)
+                {
+                    return item;
                 }
             }
             return null;
+        }
+
+        public async Task<List<Cart>?> GetListCartUser(int userId)
+        {
+            var listItem = await _context.Carts.Where(o => o.Order.UserId == userId && o.Order.Checkout == false).ToListAsync();
+            
+            if (listItem != null)
+            {
+                return listItem;
+            }
+            else return null;
         }
 
         public async Task<int?> GetUserId(string username)
@@ -128,17 +146,23 @@ namespace BukaToko.Data
             return user.Id;
         }
 
-        public async Task UpdateQty(int id, int qty)
+        public async Task Shipped(int orderId)
         {
-            try
+            var order = await _context.Orders.Where(o => o.Shipped == false && o.Checkout == true).FirstOrDefaultAsync();
+            if(order != null)
             {
-                var cart = await  GetCartById(id);
-                cart.Quantity = qty;
+                order.Shipped = true;
                 await _context.SaveChangesAsync();
             }
-            catch (Exception)
+        }
+
+        public async Task UpdateQty(int userId, int id, int qty)
+        {
+            var cart = await GetCartById(userId,id);
+            if (cart != null)
             {
-                throw;
+                cart.Quantity = qty;
+                await _context.SaveChangesAsync();
             }
         }
     }
