@@ -32,6 +32,15 @@ namespace BukaToko.Controllers
 
             return Ok(product);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var products = await _product.GetAll();
+            var productReadDtoList = _mapper.Map<IEnumerable<ReadProductDto>>(products);
+            return Ok(productReadDtoList);
+        }
+
         [HttpGet("id/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
