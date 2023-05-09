@@ -5,9 +5,11 @@ using BukaToko.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 using BC = BCrypt.Net.BCrypt;
 
@@ -33,6 +35,7 @@ namespace BukaToko.Controllers
 
             return Ok("Registrasi sukses");
         }
+        
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginUserDto loginUserDto)
         {

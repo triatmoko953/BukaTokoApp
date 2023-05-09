@@ -1,6 +1,9 @@
 using BukaToko.Data;
 using BukaToko.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,31 @@ var constr = builder.Configuration.GetConnectionString("MyDB");
 builder.Services.AddDbContext<BukaTokoDbContext>(
     options => options.UseSqlServer(constr));
 
+// jwt
+var secret = builder.Configuration["AppSettings:Secret"];
+var secretBytes = Encoding.ASCII.GetBytes(secret);
+builder.Services.AddAuthentication(o =>
+{
+    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(o =>
+{
+    o.RequireHttpsMetadata = false;
+    o.SaveToken = true;
+    o.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(secretBytes)
+    };
+});
+// policy
+var policy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder(
+        JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
+builder.Services.AddAuthorization(o => o.DefaultPolicy = policy);
+
 builder.Services.AddControllers().AddJsonOptions(opts =>
     opts.JsonSerializerOptions.PropertyNamingPolicy = null);
 
@@ -34,7 +62,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

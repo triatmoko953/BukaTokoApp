@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using BukaToko.Models;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BukaToko.Controllers
 {
@@ -20,6 +22,7 @@ namespace BukaToko.Controllers
             _mapper = mapper;
             //_messageBusClient = messageBusClient;
         }
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateProductDto createProductDto)
         {
@@ -32,7 +35,7 @@ namespace BukaToko.Controllers
 
             return Ok(product);
         }
-
+        [Authorize(Roles = "Manager,User")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -40,7 +43,7 @@ namespace BukaToko.Controllers
             var productReadDtoList = _mapper.Map<IEnumerable<ReadProductDto>>(products);
             return Ok(productReadDtoList);
         }
-
+        [Authorize(Roles = "Manager,User")]
         [HttpGet("id/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -48,6 +51,7 @@ namespace BukaToko.Controllers
             var readProductDto = _mapper.Map<ReadProductDto>(product);
             return Ok(readProductDto);
         }
+        [Authorize(Roles = "Manager,User")]
         [HttpGet("name/{name}")]
         public async Task<IActionResult> GetByName(string name)
         {
@@ -55,6 +59,7 @@ namespace BukaToko.Controllers
             var readProductDto = _mapper.Map<ReadProductDto>(product);
             return Ok(readProductDto);
         }
+        [Authorize(Roles = "Manager")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateProductDto updateProductDto)
         {
@@ -72,6 +77,7 @@ namespace BukaToko.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "Manager")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
