@@ -23,6 +23,7 @@ builder.Services.AddControllers().AddJsonOptions(opts =>
 
 builder.Services.AddScoped<IOrderRepo, OrderRepo>();
 builder.Services.AddScoped<IProductRepo, ProductRepo>();
+builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 
 var app = builder.Build();
 

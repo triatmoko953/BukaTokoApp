@@ -21,13 +21,15 @@ namespace BukaToko.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderRepo _orderRepo;
+        private readonly IProductRepo _productRepo;
         private readonly IMapper _mapper;
         private string tempName = "akun1";
 
-        public OrderController(IOrderRepo orderRepo, IMapper mapper)
+        public OrderController(IOrderRepo orderRepo, IMapper mapper, IProductRepo productRepo)
         {
             _orderRepo = orderRepo;
             _mapper = mapper;
+            _productRepo = productRepo;
         }
 
 
@@ -77,13 +79,24 @@ namespace BukaToko.Controllers
             //pake userId.Value karna return nya nullable.
             //cant convert int? -> int
 
-            var cart = new Cart
+
+            try
             {
-                Id = productId, 
-                Quantity = qty
-            };
-            await _orderRepo.AddToCart(userId.Value, cart);
-            return Ok();
+                var product = await _productRepo.GetById(productId);
+                var cart = new Cart
+                {
+                    Name = product.Name,
+                    Price = product.Price,
+                    Quantity = qty
+                };
+                await _orderRepo.AddToCart(userId.Value, cart);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
 
         }
         [HttpPut("{id}")]

@@ -63,15 +63,27 @@ namespace BukaToko.Data
             }
             else
             {
-                var tempCart = new Cart
-                {
-                    OrderId = order.Id,
-                    Name = cart.Name,
-                    Price = cart.Price,
-                    Quantity = cart.Quantity,
+                //cek jika barang ada di kerangjang
+                var getCart = await _context.Carts.Where(o => o.Name == cart.Name && o.OrderId == order.Id).FirstOrDefaultAsync();
 
-                };
-                await _context.Carts.AddAsync(tempCart);
+                //kalau gk ada add, kalau gk update qty
+                if (getCart == null)
+                {
+                    var tempCart = new Cart
+                    {
+                        OrderId = order.Id,
+                        Name = cart.Name,
+                        Price = cart.Price,
+                        Quantity = cart.Quantity,
+
+                    };
+                    await _context.Carts.AddAsync(tempCart);
+                }
+                else
+                {
+                    getCart.Quantity += cart.Quantity;
+                }
+                
                 await _context.SaveChangesAsync();
             }
         }

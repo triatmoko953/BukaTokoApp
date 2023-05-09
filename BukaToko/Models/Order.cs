@@ -9,9 +9,9 @@ public partial class Order
 
     public int UserId { get; set; }
 
-    public bool Shipped { get; set; }
-
     public bool Checkout { get; set; }
+
+    public bool Shipped { get; set; }
 
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
