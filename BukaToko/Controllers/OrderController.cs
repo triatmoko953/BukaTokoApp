@@ -8,6 +8,7 @@ using BukaToko.DTOS;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
+using System.Net.Http;
 
 
 //TODO: ganti tempname sama user dari jwt nanti
@@ -24,13 +25,15 @@ namespace BukaToko.Controllers
         private readonly IProductRepo _productRepo;
         private readonly IAccountRepo _accountRepo;
         private readonly IMapper _mapper;
-        private string tempName = "akun1";
+        private readonly HttpContext _httpContext;
+        //private string tempName = "akun1";
 
-        public OrderController(IOrderRepo orderRepo, IMapper mapper, IProductRepo productRepo)
+        public OrderController(IOrderRepo orderRepo, IMapper mapper, IProductRepo productRepo, HttpContext httpContext)
         {
             _orderRepo = orderRepo;
             _mapper = mapper;
             _productRepo = productRepo;
+            _httpContext = httpContext;
         }
 
 
@@ -50,7 +53,8 @@ namespace BukaToko.Controllers
         public async Task<IActionResult> GetCart()
         {
             //var tempName = "akun1";
-            var userId = await _orderRepo.GetUserId(tempName);
+            var user = _httpContext.User.FindFirstValue(ClaimTypes.Name);
+            var userId = await _orderRepo.GetUserId(user);
             if (userId == null) return NotFound("user not found");
 
             var listCart = await _orderRepo.GetListCartUser(userId.Value);
@@ -74,9 +78,10 @@ namespace BukaToko.Controllers
         [HttpPost("{productId}/{qty}")]
         public async Task<IActionResult> AddToCart(int productId,int qty)
         {
-            
+
             //var tempName = "akun1";
-            var userId = await _orderRepo.GetUserId(tempName);
+            var user = _httpContext.User.FindFirstValue(ClaimTypes.Name);
+            var userId = await _orderRepo.GetUserId(user);
             if (userId == null) return BadRequest("user not found");
 
             //pake userId.Value karna return nya nullable.
@@ -106,7 +111,8 @@ namespace BukaToko.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateQty(int id, int qty)
         {
-            var userId = await _orderRepo.GetUserId(tempName);
+            var user = _httpContext.User.FindFirstValue(ClaimTypes.Name);
+            var userId = await _orderRepo.GetUserId(user);
             if (userId == null) return BadRequest("user not found");
 
             var cart = await _orderRepo.GetCartById(userId.Value,id);
@@ -121,7 +127,8 @@ namespace BukaToko.Controllers
         public async Task<IActionResult> DeleteFromCart(int id)
         {
             //var tempName = "akun1";
-            var userId = await _orderRepo.GetUserId(tempName);
+            var user = _httpContext.User.FindFirstValue(ClaimTypes.Name);
+            var userId = await _orderRepo.GetUserId(user);
             if (userId == null) return BadRequest("user not found");
 
             var cart = await _orderRepo.GetCartById(userId.Value, id);
@@ -135,10 +142,19 @@ namespace BukaToko.Controllers
         [HttpGet("checkout")]
         public async Task<IActionResult> Checkout()
         {
-            var userId = await _orderRepo.GetUserId(tempName);
-            if (userId == null) return BadRequest("user not found");
-            await _orderRepo.Checkout(userId.Value);
-            return Ok();
+            try
+            {
+                var user = _httpContext.User.FindFirstValue(ClaimTypes.Name);
+                var userId = await _orderRepo.GetUserId(user);
+                if (userId == null) return BadRequest("user not found");
+                await _orderRepo.Checkout(userId.Value);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
 
         [Authorize(Roles ="Manager")]

@@ -94,8 +94,38 @@ namespace BukaToko.Data
             var order = await _context.Orders.Where(o => o.UserId==userId && o.Checkout==false ).FirstOrDefaultAsync();
             if (order!=null)
             {
-                order.Checkout = true;
-                await _context.SaveChangesAsync();
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var cart = await _context.Carts.Where(o=>o.OrderId == order.Id).ToListAsync();
+                        if (cart==null) throw new Exception("cart empty");
+                        //loop semua cart yang ada
+                        foreach (var item in cart)
+                        {
+                            //check qty product
+                            var product = await _context.Products.Where(o=>o.Name == item.Name).FirstOrDefaultAsync();
+                            if (product == null) throw new Exception("product not found");
+
+                            //cek kalau stok tidak cukup
+                            if((product.Stock - item.Quantity)<0) throw new Exception("insufficient stock");
+
+                            product.Stock -= item.Quantity;
+                            await _context.SaveChangesAsync();
+                        }
+                        order.Checkout = true;
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                }
+
+                 
             }
             
         }
