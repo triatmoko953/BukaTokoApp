@@ -34,5 +34,14 @@ namespace BukaToko.AsyncService
             basicProperties: null, body: body);
             Console.WriteLine($"--> We have sent {message}");
         }
+        public void Dispose()
+        {
+            Console.WriteLine("--> Message Bus Disposed");
+            if (_channel.IsOpen)
+            {
+                _channel.Close();
+                _connection.Close();
+            }
+        }
     }
 }
