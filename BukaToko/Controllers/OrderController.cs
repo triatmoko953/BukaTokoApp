@@ -35,6 +35,7 @@ namespace BukaToko.Controllers
 
 
         //list order buat manager
+        [Authorize(Roles ="Manager")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ReadOrderDto>>> GetAllOrder()
         {
@@ -43,7 +44,7 @@ namespace BukaToko.Controllers
             var listorder = _mapper.Map<IEnumerable<ReadOrderDto>>(orders);
             return Ok(listorder);
         }
-
+        [Authorize(Roles = "Manager,User")]
         [HttpGet("Cart")]
         public async Task<IActionResult> GetCart()
         {
@@ -68,6 +69,7 @@ namespace BukaToko.Controllers
             return Ok(temp);
         }
 
+        [Authorize(Roles ="User")]
         [HttpPost]
         public async Task<IActionResult> AddToCart(int productId,int qty)
         {
@@ -99,6 +101,7 @@ namespace BukaToko.Controllers
             
 
         }
+        [Authorize(Roles = "User")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateQty(int id, int qty)
         {
@@ -112,6 +115,7 @@ namespace BukaToko.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "User")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFromCart(int id)
         {
@@ -126,6 +130,7 @@ namespace BukaToko.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "User")]
         [HttpGet("checkout")]
         public async Task<IActionResult> Checkout()
         {
@@ -135,6 +140,7 @@ namespace BukaToko.Controllers
             return Ok();
         }
 
+        [Authorize(Roles ="Manager")]
         [HttpGet("ShippedOrder")]
         public async Task<IActionResult> ShippedOrder(int OrderId)
         {
