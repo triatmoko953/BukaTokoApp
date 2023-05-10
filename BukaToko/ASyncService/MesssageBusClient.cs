@@ -1,6 +1,6 @@
 ﻿namespace BukaToko.AsyncService
 {
-    public class MesssageBusClient : BackgroundService
+    public class MesssageBusPublish : BackgroundService
     {
         private readonly IConfiguration _configuration;
 
