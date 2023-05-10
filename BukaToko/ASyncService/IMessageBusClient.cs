@@ -1,6 +1,9 @@
-﻿namespace BukaToko.ASyncService
+﻿using BukaToko.DTOS;
+
+namespace BukaToko.ASyncService
 {
-    public class IMessageBusClient
+    public interface IMessageBusClient
     {
+        void PublishNewProduct(ProductPublishDto productPublishDto);
     }
 }
