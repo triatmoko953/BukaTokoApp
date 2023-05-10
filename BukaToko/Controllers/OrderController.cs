@@ -1,12 +1,12 @@
 ﻿using BukaToko.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using HotChocolate.Authorization;
 using System.Security.Claims;
 using BukaToko.DTOS;
 using BukaToko.Models;
 using BukaToko.DTOS;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 
 
