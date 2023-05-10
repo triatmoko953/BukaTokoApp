@@ -22,6 +22,7 @@ namespace BukaToko.Controllers
     {
         private readonly IOrderRepo _orderRepo;
         private readonly IProductRepo _productRepo;
+        private readonly IAccountRepo _accountRepo;
         private readonly IMapper _mapper;
         private string tempName = "akun1";
 
@@ -70,7 +71,7 @@ namespace BukaToko.Controllers
         }
 
         [Authorize(Roles ="User")]
-        [HttpPost]
+        [HttpPost("{productId}/{qty}")]
         public async Task<IActionResult> AddToCart(int productId,int qty)
         {
             

@@ -1,4 +1,4 @@
-using BukaToko.ASyncService;
+//using BukaToko.ASyncService;
 using BukaToko.Data;
 using BukaToko.Event;
 using BukaToko.Models;
@@ -57,7 +57,7 @@ builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 builder.Services.AddScoped<IWalletRepo, WalletRepo>();
 
 builder.Services.AddSingleton<IEventProccessor, EventProccessor>();
-builder.Services.AddHostedService<MessageBusSubscriber>();
+//builder.Services.AddHostedService<MessageBusSubscriber>();
 builder.Services.AddMvc()
                 .AddJsonOptions(opt =>
                 {
