@@ -1,4 +1,6 @@
+//using BukaToko.ASyncService;
 using BukaToko.Data;
+using BukaToko.Event;
 using BukaToko.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +54,15 @@ builder.Services.AddControllers().AddJsonOptions(opts =>
 builder.Services.AddScoped<IOrderRepo, OrderRepo>();
 builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
+builder.Services.AddScoped<IWalletRepo, WalletRepo>();
+
+builder.Services.AddSingleton<IEventProccessor, EventProccessor>();
+//builder.Services.AddHostedService<MessageBusSubscriber>();
+builder.Services.AddMvc()
+                .AddJsonOptions(opt =>
+                {
+                    opt.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+                });
 
 var app = builder.Build();
 
