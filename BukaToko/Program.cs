@@ -1,4 +1,4 @@
-using BukaToko.ASyncService;
+//using BukaToko.ASyncService;
 using BukaToko.Data;
 using BukaToko.Event;
 using BukaToko.Models;
@@ -16,6 +16,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -59,7 +60,7 @@ builder.Services.AddScoped<IWalletRepo, WalletRepo>();
 builder.Services.AddHttpClient<IGooleDataClient, HttpGooleDataClient>();
 
 builder.Services.AddSingleton<IEventProccessor, EventProccessor>();
-builder.Services.AddHostedService<MessageBusSubscriber>();
+//builder.Services.AddHostedService<MessageBusSubscriber>();
 builder.Services.AddMvc()
                 .AddJsonOptions(opt =>
                 {

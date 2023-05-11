@@ -59,7 +59,6 @@ namespace BukaToko.Data
                         await transaction.RollbackAsync();
                         throw;
                     }
-                    
                 }
             }
             else
@@ -94,8 +93,50 @@ namespace BukaToko.Data
             var order = await _context.Orders.Where(o => o.UserId==userId && o.Checkout==false ).FirstOrDefaultAsync();
             if (order!=null)
             {
-                order.Checkout = true;
-                await _context.SaveChangesAsync();
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var totalPrice = 0;
+                        var cart = await _context.Carts.Where(o=>o.OrderId == order.Id).ToListAsync();
+                        if (cart==null) throw new Exception("cart empty");
+                        //loop semua cart yang ada
+                        foreach (var item in cart)
+                        {
+                            //check qty product
+                            var product = await _context.Products.Where(o=>o.Name == item.Name).FirstOrDefaultAsync();
+                            if (product == null) throw new Exception("product not found");
+
+                            //cek kalau stok tidak cukup
+                            if((product.Stock - item.Quantity)<0) throw new Exception("insufficient stock");
+
+                            //kuraingin stok barang
+                            totalPrice += product.Price;
+                            product.Stock -= item.Quantity;
+                            await _context.SaveChangesAsync();
+                        }
+
+                        //get wallet
+                        var user = await _context.Users.Where(o => o.Id==userId).FirstOrDefaultAsync();
+                        var wallet = await _context.Wallets.Where(o => o.Id == user.WalletId).FirstOrDefaultAsync();
+                        //cek kalau stok tidak cukup
+                        if ((wallet.Cash - totalPrice) < 0) throw new Exception("no cash");
+
+                        //kurangin cash
+                        wallet.Cash -= totalPrice;
+                        order.Checkout = true;
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                }
+
+                 
             }
             
         }

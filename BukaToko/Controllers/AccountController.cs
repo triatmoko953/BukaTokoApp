@@ -47,11 +47,12 @@ namespace BukaToko.Controllers
             return Ok(userToken);
         }
 
-        [HttpPost("LoginByGoole")]
-        public async Task<IActionResult> LoginbyGoole(LoginUserDto user)
+        [Authorize(Roles = "Admin")]
+        [HttpPost("Banned")]
+        public async Task<IActionResult> Banned(BannedUserDto bannedUserDto)
         {
-            var userToken = await _gooleDataClient.SendUserToGoole(user);
-            return Ok(userToken);
+            var Message = _userRepo.Banned(bannedUserDto);
+            return Ok(Message);
         }
     }
 }
