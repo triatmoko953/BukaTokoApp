@@ -6,13 +6,13 @@ using System.Text.Json;
 
 namespace BukaToko.AsyncService
 {
-    public class MesssageBusClient : IMessageBusClient
+    public class MessageBusClient : IMessageBusClient
     {
         private readonly IConfiguration _configuration;
         private readonly IConnection _connection;
         private readonly IModel _channel;
 
-        public MesssageBusClient(IConfiguration configuration)
+        public MessageBusClient(IConfiguration configuration)
         {
             _configuration = configuration;
             var factory = new ConnectionFactory()
