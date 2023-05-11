@@ -37,9 +37,35 @@ namespace BukaToko.AsyncService
         {
             Console.WriteLine("--> RabbitMQ Connection Shutdown");
         }
-        public void PublishNewWallet(TopUpPublishedDto topUpPublishedDto)
+
+        public void PublishNewWallet(WalletPublishDto walletPublishDto)
         {
-            throw new NotImplementedException();
+            var message = JsonSerializer.Serialize(walletPublishDto);
+            if (_connection.IsOpen)
+            {
+                Console.WriteLine("--> RabbitMQ connection is open, sending message...");
+                SendMessage(message);
+            }
+            else
+            {
+                Console.WriteLine("--> RabbitMQ connection is closed, not sending...");
+            }
+        }
+        private void SendMessage(string message)
+        {
+            var body = Encoding.UTF8.GetBytes(message);
+            _channel.BasicPublish(exchange: "trigger_wallet", routingKey: "",
+            basicProperties: null, body: body);
+            Console.WriteLine($"--> We have sent {message}");
+        }
+        public void Dispose()
+        {
+            Console.WriteLine("--> Message Bus Disposed");
+            if (_channel.IsOpen)
+            {
+                _channel.Close();
+                _connection.Close();
+            }
         }
     }
 }

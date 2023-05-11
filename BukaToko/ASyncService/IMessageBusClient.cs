@@ -4,6 +4,6 @@ namespace BukaToko.ASyncService
 {
     public interface IMessageBusClient
     {
-        void PublishNewWallet(TopUpPublishedDto topUpPublishedDto);
+        void PublishNewWallet(WalletPublishDto walletPublishDto);
     }
 }
