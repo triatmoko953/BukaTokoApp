@@ -43,6 +43,7 @@ namespace BukaToko.Controllers
             return Ok(userToken);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("Banned")]
         public async Task<IActionResult> Banned(BannedUserDto bannedUserDto)
         {
