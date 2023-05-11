@@ -28,15 +28,13 @@ namespace BukaToko.Controllers
         private readonly HttpContext _httpContext;
         //private string tempName = "akun1";
 
-        public OrderController(IOrderRepo orderRepo, IMapper mapper, IProductRepo productRepo, HttpContext httpContext)
+        public OrderController(IOrderRepo orderRepo, IMapper mapper, IProductRepo productRepo, IHttpContextAccessor httpContextAccessor)
         {
             _orderRepo = orderRepo;
             _mapper = mapper;
             _productRepo = productRepo;
-            _httpContext = httpContext;
+            _httpContext = httpContextAccessor.HttpContext;
         }
-
-
 
         //list order buat manager
         [Authorize(Roles ="Manager")]
