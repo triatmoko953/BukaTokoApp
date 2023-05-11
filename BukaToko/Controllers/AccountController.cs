@@ -46,6 +46,12 @@ namespace BukaToko.Controllers
             var userToken = _userRepo.Login(loginUserDto);
             return Ok(userToken);
         }
+        [HttpPost("LoginByGoole")]
+        public async Task<IActionResult> LoginbyGoole(LoginUserDto user)
+        {
+            var userToken = await _gooleDataClient.SendUserToGoole(user);
+            return Ok(userToken);
+        }
 
         [Authorize(Roles = "Admin")]
         [HttpPost("Banned")]
