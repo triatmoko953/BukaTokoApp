@@ -8,6 +8,6 @@ namespace BukaToko.Data
         string Register (User user);
         UserToken Login (LoginUserDto user);
         bool SaveChanges();
-        string Banned (BannedUserDto bannedUser);
+        string Banned(BannedUserDto bannedUser);
     }
 }
