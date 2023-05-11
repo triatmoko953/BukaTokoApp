@@ -44,6 +44,11 @@ namespace BukaToko.Data
                     
                     foreach (var role in roles)
                     {
+                        //banned user
+                        if (role == "BannedUser")
+                        {
+                            return new UserToken { Message = "Login is Banned by admin" };
+                        }
                         roleClaims.Add(ClaimTypes.Role, "" + role);
                     }
                     
