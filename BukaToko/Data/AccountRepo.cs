@@ -41,17 +41,9 @@ namespace BukaToko.Data
                                 select r.Name;
                     
                         var roleClaims = new Dictionary<string, object>();
-                    //if (roleClaims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"].Contains("BannedUser"))
-                    //{
-                    //    return new UserToken { Message = "Login is Banned by admin" };
-                    //}
+                    
                     foreach (var role in roles)
                     {
-                        //banned user
-                        if (role == "BannedUser")
-                        {
-                            return new UserToken { Message = "Login is Banned by admin" };
-                        }
                         roleClaims.Add(ClaimTypes.Role, "" + role);
                     }
                     
@@ -150,12 +142,9 @@ namespace BukaToko.Data
         {
             return (_context.SaveChanges() >= 0);
         }
-
-        [Authorize(Roles = "Admin")]
         public string Banned(BannedUserDto bannedUser)
         {
             // get username
-            //var user = await _userRepo.GetUser(username);
             var user = _context.Users.FirstOrDefault(o => o.Username == bannedUser.Username);
 
             if (user == null)
@@ -171,9 +160,6 @@ namespace BukaToko.Data
             _context.UserRoles.Add(ur);
             _context.SaveChanges();
             return "Banned User sukses";
-            //user.IsBanned = true;
-            //await _userRepo.UpdateUser(user);
-
         }
     }
 }
