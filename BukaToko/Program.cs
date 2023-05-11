@@ -2,6 +2,7 @@ using BukaToko.ASyncService;
 using BukaToko.Data;
 using BukaToko.Event;
 using BukaToko.Models;
+using BukaToko.SyncService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -55,6 +56,7 @@ builder.Services.AddScoped<IOrderRepo, OrderRepo>();
 builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 builder.Services.AddScoped<IWalletRepo, WalletRepo>();
+builder.Services.AddHttpClient<IGooleDataClient, HttpGooleDataClient>();
 
 builder.Services.AddSingleton<IEventProccessor, EventProccessor>();
 builder.Services.AddHostedService<MessageBusSubscriber>();

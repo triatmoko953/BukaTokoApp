@@ -15,9 +15,6 @@ namespace BukaToko.ASyncService
         private readonly ILogger<MessageBusSubscriber> _logger;
         private IConnection _connection;
         private RabbitMQ.Client.IModel _channel;
-        private string _queueName;
-        private string _productQueueName;
-        private string _walletQueueName;
         private string _walletTopupQueueName;
 
         public MessageBusSubscriber(IConfiguration configuration, IEventProccessor eventProcessor,
@@ -39,16 +36,6 @@ namespace BukaToko.ASyncService
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-
-            // Declare product
-            _channel.ExchangeDeclare(exchange: "trigger_product", type: ExchangeType.Fanout);
-            _productQueueName = _channel.QueueDeclare().QueueName;
-            _channel.QueueBind(queue: _productQueueName, exchange: "trigger_product", routingKey: "");
-
-            // Declare wallet
-            _channel.ExchangeDeclare(exchange: "trigger_wallet", type: ExchangeType.Fanout);
-            _walletQueueName = _channel.QueueDeclare().QueueName;
-            _channel.QueueBind(queue: _walletQueueName, exchange: "trigger_wallet", routingKey: "");
 
             // Declare topup wallet
             _channel.ExchangeDeclare(exchange: "trigger_topup_wallet", type: ExchangeType.Fanout);

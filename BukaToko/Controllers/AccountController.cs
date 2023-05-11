@@ -12,6 +12,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 
 using BC = BCrypt.Net.BCrypt;
+using BukaToko.SyncService;
 
 namespace BukaToko.Controllers
 {
@@ -21,10 +22,13 @@ namespace BukaToko.Controllers
     {
         private readonly IAccountRepo _userRepo;
         private readonly IMapper _mapper;
-        public AccountController(IAccountRepo userRepo, IMapper mapper)
+        private readonly IGooleDataClient _gooleDataClient;
+
+        public AccountController(IAccountRepo userRepo, IMapper mapper,IGooleDataClient gooleDataClient)
         {
             _userRepo = userRepo;
             _mapper = mapper;
+            _gooleDataClient = gooleDataClient;
         }
         [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterUserDto registerUserDto)
@@ -42,6 +46,12 @@ namespace BukaToko.Controllers
             var userToken = _userRepo.Login(loginUserDto);
             return Ok(userToken);
         }
-            
+
+        [HttpPost("LoginByGoole")]
+        public async Task<IActionResult> LoginbyGoole(LoginUserDto user)
+        {
+            var userToken = await _gooleDataClient.SendUserToGoole(user);
+            return Ok(userToken);
+        }
     }
 }
