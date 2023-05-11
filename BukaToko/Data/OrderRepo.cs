@@ -97,6 +97,7 @@ namespace BukaToko.Data
                 {
                     try
                     {
+                        var totalPrice = 0;
                         var cart = await _context.Carts.Where(o=>o.OrderId == order.Id).ToListAsync();
                         if (cart==null) throw new Exception("cart empty");
                         //loop semua cart yang ada
@@ -109,9 +110,20 @@ namespace BukaToko.Data
                             //cek kalau stok tidak cukup
                             if((product.Stock - item.Quantity)<0) throw new Exception("insufficient stock");
 
+                            //kuraingin stok barang
+                            totalPrice += product.Price;
                             product.Stock -= item.Quantity;
                             await _context.SaveChangesAsync();
                         }
+
+                        //get wallet
+                        var user = await _context.Users.Where(o => o.Id==userId).FirstOrDefaultAsync();
+                        var wallet = await _context.Wallets.Where(o => o.Id == user.WalletId).FirstOrDefaultAsync();
+                        //cek kalau stok tidak cukup
+                        if ((wallet.Cash - totalPrice) < 0) throw new Exception("no cash");
+
+                        //kurangin cash
+                        wallet.Cash -= totalPrice;
                         order.Checkout = true;
                         await _context.SaveChangesAsync();
                         await transaction.CommitAsync();
