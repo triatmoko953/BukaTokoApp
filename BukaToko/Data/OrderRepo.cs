@@ -59,7 +59,6 @@ namespace BukaToko.Data
                         await transaction.RollbackAsync();
                         throw;
                     }
-                    
                 }
             }
             else

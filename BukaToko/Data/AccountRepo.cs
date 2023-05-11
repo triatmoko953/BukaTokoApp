@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using BC = BCrypt.Net.BCrypt;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BukaToko.Data
 {
@@ -38,12 +39,19 @@ namespace BukaToko.Data
                                 on ur.RoleId equals r.Id
                                 where ur.UserId == usr.Id
                                 select r.Name;
-
-                    var roleClaims = new Dictionary<string, object>();
+                    
+                        var roleClaims = new Dictionary<string, object>();
+                    
                     foreach (var role in roles)
                     {
+                        //banned user
+                        if (role == "BannedUser")
+                        {
+                            return new UserToken { Message = "Login is Banned by admin" };
+                        }
                         roleClaims.Add(ClaimTypes.Role, "" + role);
                     }
+                    
                     var secret = _configuration.GetValue<string>("AppSettings:Secret");
                     var secretBytes = Encoding.ASCII.GetBytes(secret);
                     // token
@@ -113,7 +121,7 @@ namespace BukaToko.Data
                     }
                     _context.Users.Add(u);
                     // ambil role member
-                    var role = _context.Roles.Where(o => o.Name == "Manager").FirstOrDefault();
+                    var role = _context.Roles.Where(o => o.Name == "User").FirstOrDefault();
                     if (role == null)
                     {
                         throw new Exception("role is null");
@@ -138,6 +146,26 @@ namespace BukaToko.Data
         public bool SaveChanges()
         {
             return (_context.SaveChanges() >= 0);
+        }
+        [Authorize(Roles = "Admin")]
+        public string Banned(BannedUserDto bannedUser)
+        {
+            // get username
+            var user = _context.Users.FirstOrDefault(o => o.Username == bannedUser.Username);
+
+            if (user == null)
+            {
+                // jika user tidak ditemukan
+                throw new ArgumentException($"User with username: {bannedUser.Username} not found or is banned.");
+            }
+
+            var ur = new UserRole();
+            ur.User = user;
+            var role = _context.Roles.Where(o => o.Name == "BannedUser").FirstOrDefault();
+            ur.Role = role;
+            _context.UserRoles.Add(ur);
+            _context.SaveChanges();
+            return "Banned User sukses";
         }
     }
 }
