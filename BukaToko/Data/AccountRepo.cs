@@ -142,6 +142,7 @@ namespace BukaToko.Data
         {
             return (_context.SaveChanges() >= 0);
         }
+        [Authorize(Roles = "Admin")]
         public string Banned(BannedUserDto bannedUser)
         {
             // get username
