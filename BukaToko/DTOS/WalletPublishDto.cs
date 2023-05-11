@@ -2,7 +2,7 @@
 
 namespace BukaToko.DTOS
 {
-    public class WalletPublishDtocs
+    public class WalletPublishDto
     {
         [Required]
         public string Username { get; set; }
