@@ -42,6 +42,13 @@ namespace BukaToko.Controllers
             var userToken = _userRepo.Login(loginUserDto);
             return Ok(userToken);
         }
-            
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("Banned")]
+        public async Task<IActionResult> Banned(BannedUserDto bannedUserDto)
+        {
+            var Message = _userRepo.Banned(bannedUserDto);
+            return Ok(Message);
+        }
     }
 }
