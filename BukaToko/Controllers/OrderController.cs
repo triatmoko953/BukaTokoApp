@@ -150,7 +150,7 @@ namespace BukaToko.Controllers
                 var userId = await _orderRepo.GetUserId(user);
                 if (userId == null) return BadRequest("user not found");
                 await _orderRepo.Checkout(userId.Value);
-                var readWallet = await _orderRepo.GetUserId(userId.Value);
+                var readWallet = await _orderRepo.GetUserId(user);
                 var walletPublishedDto = _mapper.Map<WalletPublishDto>(readWallet);
                 walletPublishedDto.Event = "Wallet_Published";
                 _messageBusClient.PublishNewWallet(walletPublishedDto);
