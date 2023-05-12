@@ -28,11 +28,11 @@ namespace BukaToko.Data
         }
         public async Task<Wallet> TopUp(string username, int cash)
         {
-            var wallet = await _context.Wallets.FirstOrDefaultAsync(w => w.Username == username);
+            var wallet =  _context.Wallets.FirstOrDefault(w => w.Username == username);
             if (wallet != null)
             {
-                wallet.Cash = cash;
-                await _context.SaveChangesAsync();
+                wallet.Cash += cash;
+                _context.SaveChanges();
                 return wallet;
             }
             else

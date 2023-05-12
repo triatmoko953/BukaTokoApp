@@ -36,7 +36,7 @@ namespace BukaToko.Event
             var eventType = JsonSerializer.Deserialize<GenericEventDto>(notificationMessage);
             switch (eventType.Event)
             {
-                case "TopUp_Published":
+                case "TopupWallet_NewPublished":
                     Console.WriteLine("--> TopupWallet_NewPublished Event Detected");
                     return EventType.TopupWalletPublished;
                 default:
@@ -61,7 +61,7 @@ namespace BukaToko.Event
                     {
                         repo.TopUp(ReadTopUpDto.Username, ReadTopUpDto.Cash);
                         repo.SaveChanges();
-                        Console.WriteLine($"--> TopTup {ReadTopUpDto.Username},{ReadTopUpDto.Cash} added");
+                        Console.WriteLine($"--> TopTup {ReadTopUpDto.Username}, {ReadTopUpDto.Cash} added");
                     }
                     else
                     {
