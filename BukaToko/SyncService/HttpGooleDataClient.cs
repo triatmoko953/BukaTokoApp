@@ -33,7 +33,7 @@ namespace BukaToko.SyncService
                 Encoding.UTF8,
                 "application/json"
             );
-            var response = await _httpClient.PostAsync($"{_configuration["GooleService"]}", httpContent);;
+            var response = await _httpClient.PostAsync($"{_configuration["GooleService"]}", httpContent);
             // jika digoole return succes
             if (response.IsSuccessStatusCode)
             {
