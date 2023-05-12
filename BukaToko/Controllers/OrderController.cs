@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using System.Net.Http;
+using BukaToko.ASyncService;
+using BukaToko.AsyncService;
 
 
 //TODO: ganti tempname sama user dari jwt nanti
@@ -26,14 +28,16 @@ namespace BukaToko.Controllers
         private readonly IAccountRepo _accountRepo;
         private readonly IMapper _mapper;
         private readonly HttpContext _httpContext;
+        private readonly IMessageBusClient _messageBusClient;
         //private string tempName = "akun1";
 
-        public OrderController(IOrderRepo orderRepo, IMapper mapper, IProductRepo productRepo, IHttpContextAccessor httpContextAccessor)
+        public OrderController(IOrderRepo orderRepo, IMapper mapper, IProductRepo productRepo, IHttpContextAccessor httpContextAccessor, IMessageBusClient messageBusClient)
         {
             _orderRepo = orderRepo;
             _mapper = mapper;
             _productRepo = productRepo;
             _httpContext = httpContextAccessor.HttpContext;
+            _messageBusClient = messageBusClient;
         }
 
         //list order buat manager
@@ -146,6 +150,16 @@ namespace BukaToko.Controllers
                 var userId = await _orderRepo.GetUserId(user);
                 if (userId == null) return BadRequest("user not found");
                 await _orderRepo.Checkout(userId.Value);
+
+                // publish message bus untuk update cash di wallet
+
+                var walletPublishDto = new WalletPublishDto
+                {
+                    Username = _httpContext.User.FindFirstValue(ClaimTypes.Name),
+                    Cash = wallet.Cash
+                };
+
+                _messageBusClient.PublishNewWallet(walletPublishDto);
                 return Ok();
             }
             catch (Exception ex)

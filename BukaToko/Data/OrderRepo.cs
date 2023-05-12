@@ -1,4 +1,5 @@
-﻿using BukaToko.DTOS;
+﻿using BukaToko.ASyncService;
+using BukaToko.DTOS;
 using BukaToko.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -11,10 +12,12 @@ namespace BukaToko.Data
     public class OrderRepo : IOrderRepo
     {
         private readonly BukaTokoDbContext _context;
+        private readonly IMessageBusClient _messageBusClient;
 
-        public OrderRepo(BukaTokoDbContext context)
+        public OrderRepo(BukaTokoDbContext context, IMessageBusClient messageBusClient)
         {
             _context = context;
+            _messageBusClient = messageBusClient;
         }
 
         public async Task AddToCart(int userId,Cart cart)
@@ -127,6 +130,14 @@ namespace BukaToko.Data
                         order.Checkout = true;
                         await _context.SaveChangesAsync();
                         await transaction.CommitAsync();
+
+                        // publish new wallet message to message bus
+                        var walletPublishDto = new WalletPublishDto
+                        {
+                            Username = user.Username,
+                            Cash = totalPrice
+                        };
+                        _messageBusClient.PublishNewWallet(walletPublishDto);
 
                     }
                     catch (Exception ex)
