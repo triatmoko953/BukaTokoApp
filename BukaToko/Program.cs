@@ -1,4 +1,5 @@
 //using BukaToko.ASyncService;
+using BukaToko.AsyncService;
 using BukaToko.ASyncService;
 using BukaToko.Data;
 using BukaToko.Event;
@@ -18,6 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
+
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -63,6 +65,7 @@ builder.Services.AddSingleton<IEventProccessor, EventProccessor>();
 builder.Services.AddHostedService<MessageBusSubscriber>();
 
 builder.Services.AddSingleton<IEventProccessor, EventProccessor>();
+builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
 //builder.Services.AddHostedService<MessageBusSubscriber>();
 builder.Services.AddMvc()
                 .AddJsonOptions(opt =>
