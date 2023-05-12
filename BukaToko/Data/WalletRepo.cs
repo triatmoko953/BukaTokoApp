@@ -26,12 +26,12 @@ namespace BukaToko.Data
         {
             return await _context.Wallets.ToListAsync();
         }
-        public async Task<Wallet> TopUp(string username, int amount)
+        public async Task<Wallet> TopUp(string username, int cash)
         {
             var wallet = await _context.Wallets.FirstOrDefaultAsync(w => w.Username == username);
             if (wallet != null)
             {
-                wallet.Cash += amount;
+                wallet.Cash = cash;
                 await _context.SaveChangesAsync();
                 return wallet;
             }

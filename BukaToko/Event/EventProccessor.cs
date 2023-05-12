@@ -53,7 +53,10 @@ namespace BukaToko.Event
                 var topUpPublishedDto = JsonSerializer.Deserialize<TopUpPublishedDto>(topupWalletMessage);
                 try
                 {
-                    var ReadTopUpDto = _mapper.Map<ReadTopUpDto>(topUpPublishedDto);
+                    var cashToSaldoDto = new CashToSaldoDto();
+                    cashToSaldoDto.Username = topUpPublishedDto.Username;
+                    cashToSaldoDto.Cash = topUpPublishedDto.Saldo;
+                    var ReadTopUpDto = _mapper.Map<ReadTopUpDto>(cashToSaldoDto);
                     if (repo.ExternalWalletExists(ReadTopUpDto.Username))
                     {
                         repo.TopUp(ReadTopUpDto.Username, ReadTopUpDto.Cash);

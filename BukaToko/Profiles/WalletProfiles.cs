@@ -10,7 +10,7 @@ namespace BukaToko.Profiles
         {
             CreateMap<TopUpPublishedDto, ReadTopUpDto>();
             CreateMap<Wallet, ReadWalletDto>();
-            //CreateMap<Wallet,IEnumerable<ReadWalletDto>> ();
+            CreateMap<CashToSaldoDto, ReadTopUpDto>();
 
         }
     }
