@@ -39,6 +39,9 @@ namespace BukaToko.Event
                 case "TopUp_Published":
                     Console.WriteLine("--> TopupWallet_NewPublished Event Detected");
                     return EventType.TopupWalletPublished;
+                case "Wallet_Published":
+                    Console.WriteLine("--> Wallet_NewPublished Event Detected");
+                    return EventType.WalletPublishedDto;
                 default:
                     Console.WriteLine("--> Could not determine the event type");
                     return EventType.Undetermined;
@@ -80,6 +83,7 @@ namespace BukaToko.Event
     enum EventType
     {
         TopupWalletPublished,
+        WalletPublishedDto,
         Undetermined
     }
 }
