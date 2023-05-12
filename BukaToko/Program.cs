@@ -1,4 +1,5 @@
 //using BukaToko.ASyncService;
+using BukaToko.ASyncService;
 using BukaToko.Data;
 using BukaToko.Event;
 using BukaToko.Models;
@@ -58,6 +59,8 @@ builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 builder.Services.AddScoped<IWalletRepo, WalletRepo>();
 builder.Services.AddHttpClient<IGooleDataClient, HttpGooleDataClient>();
+builder.Services.AddSingleton<IEventProccessor, EventProccessor>();
+builder.Services.AddHostedService<MessageBusSubscriber>();
 
 builder.Services.AddSingleton<IEventProccessor, EventProccessor>();
 //builder.Services.AddHostedService<MessageBusSubscriber>();

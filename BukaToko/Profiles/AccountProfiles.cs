@@ -12,6 +12,8 @@ namespace BukaToko.Profiles
             CreateMap<RegisterUserDto, User>();
             CreateMap<ReadUserDto, User>();
             CreateMap<User , ReadUserDto>();
+            CreateMap<LoginUserDto,User>();
+
         }
     }
 }

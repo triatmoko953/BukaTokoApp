@@ -49,8 +49,16 @@ namespace BukaToko.Controllers
         [HttpPost("LoginByGoole")]
         public async Task<IActionResult> LoginbyGoole(LoginUserDto user)
         {
-            var userToken = await _gooleDataClient.SendUserToGoole(user);
-            return Ok(userToken);
+            try
+            {
+                var userToken = await _gooleDataClient.SendUserToGoole(user);
+                return Ok(userToken);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
 
         [Authorize(Roles = "Admin")]

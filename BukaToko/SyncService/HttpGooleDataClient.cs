@@ -5,6 +5,7 @@ using BukaToko.Models;
 using BukaToko.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace BukaToko.SyncService
 {
@@ -14,13 +15,15 @@ namespace BukaToko.SyncService
         private readonly IConfiguration _configuration;
         private readonly IAccountRepo _accountRepo;
         private readonly BukaTokoDbContext _context;
+        private readonly IMapper _mapper;
 
-        public HttpGooleDataClient(HttpClient httpClient, IConfiguration configuration, IAccountRepo accountRepo, BukaTokoDbContext context)
+        public HttpGooleDataClient(HttpClient httpClient, IConfiguration configuration, IAccountRepo accountRepo, BukaTokoDbContext context,IMapper mapper)
         {
             _httpClient = httpClient;
             _configuration = configuration;
             _accountRepo = accountRepo;
             _context = context;
+            _mapper = mapper;
 
         }
         public async Task<UserToken> SendUserToGoole(LoginUserDto user)
@@ -36,13 +39,17 @@ namespace BukaToko.SyncService
                 var u = await _context.Users.FirstOrDefaultAsync(p => p.Username == user.Username);
                 if (u == null)
                 {
-                    throw new Exception("silahkan registrasi dahulu di bukatoko dengan username yang sama");
+                    //throw new Exception("silahkan registrasi dahulu di bukatoko dengan username yang sama");
+                    var userRegister = _mapper.Map<User>(user);
+                    _accountRepo.Register(userRegister);
+                    await _context.SaveChangesAsync();
+                    return _accountRepo.Login(user);
                 }
                 return _accountRepo.Login(user);
             }
             else
             {
-                throw new Exception("Username salah silahkan di cek kembali, atau jika belum punya akun goole silahkan registrasi di goole dahulu");
+                throw new Exception("Username Password Invalid");
             }         
         }
     }
