@@ -33,13 +33,15 @@ namespace BukaToko.SyncService
                 Encoding.UTF8,
                 "application/json"
             );
-            var response = await _httpClient.PostAsync($"{_configuration["GooleService"]}", httpContent);
+            var response = await _httpClient.PostAsync($"{_configuration["GooleService"]}", httpContent);;
+            // jika digoole return succes
             if (response.IsSuccessStatusCode)
             {
                 var u = await _context.Users.FirstOrDefaultAsync(p => p.Username == user.Username);
                 if (u == null)
                 {
                     //throw new Exception("silahkan registrasi dahulu di bukatoko dengan username yang sama");
+                    //diregis dulu baru login
                     var userRegister = _mapper.Map<User>(user);
                     _accountRepo.Register(userRegister);
                     await _context.SaveChangesAsync();

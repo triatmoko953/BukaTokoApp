@@ -1,6 +1,12 @@
-﻿namespace BukaToko.DTOS
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BukaToko.DTOS
 {
     public class CashToSaldoDto
     {
+        [Required]
+        public string Username { get; set; }
+        [Required]
+        public decimal Cash { get; set; }
     }
 }
