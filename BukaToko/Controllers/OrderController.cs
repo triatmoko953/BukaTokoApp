@@ -150,16 +150,6 @@ namespace BukaToko.Controllers
                 var userId = await _orderRepo.GetUserId(user);
                 if (userId == null) return BadRequest("user not found");
                 await _orderRepo.Checkout(userId.Value);
-
-                // publish message bus untuk update cash di wallet
-
-                var walletPublishDto = new WalletPublishDto
-                {
-                    Username = _httpContext.User.FindFirstValue(ClaimTypes.Name),
-                    Cash = wallet.Cash
-                };
-
-                _messageBusClient.PublishNewWallet(walletPublishDto);
                 return Ok();
             }
             catch (Exception ex)
