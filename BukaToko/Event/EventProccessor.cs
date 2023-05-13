@@ -64,7 +64,7 @@ namespace BukaToko.Event
                     {
                         repo.TopUp(ReadTopUpDto.Username, ReadTopUpDto.Cash);
                         repo.SaveChanges();
-                        Console.WriteLine($"--> TopTup {ReadTopUpDto.Username}, {ReadTopUpDto.Cash} added");
+                        Console.WriteLine($"--> Received Topup {ReadTopUpDto.Username}, {ReadTopUpDto.Cash} added");
                     }
                     else
                     {

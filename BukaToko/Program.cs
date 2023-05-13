@@ -65,7 +65,7 @@ builder.Services.AddSingleton<IEventProccessor, EventProccessor>();
 builder.Services.AddHostedService<MessageBusSubscriber>();
 
 builder.Services.AddSingleton<IEventProccessor, EventProccessor>();
-builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
+builder.Services.AddScoped<IMessageBusClient, MessageBusClient>();
 //builder.Services.AddHostedService<MessageBusSubscriber>();
 builder.Services.AddMvc()
                 .AddJsonOptions(opt =>
