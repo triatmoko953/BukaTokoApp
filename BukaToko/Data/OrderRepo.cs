@@ -137,6 +137,7 @@ namespace BukaToko.Data
                             Username = user.Username,
                             Cash = totalPrice
                         };
+                        walletPublishDto.Event = "Wallet_Published";
                         _messageBusClient.PublishNewWallet(walletPublishDto);
 
                     }
