@@ -24,7 +24,7 @@ namespace BukaToko.AsyncService
             {
                 _connection = factory.CreateConnection();
                 _channel = _connection.CreateModel();
-                _channel.ExchangeDeclare(exchange: "trigger_Wallet", type: ExchangeType.Fanout);
+                _channel.ExchangeDeclare(exchange: "trigger_cashout_wallet", type: ExchangeType.Fanout);
                 _connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
                 Console.WriteLine("--> Connected to Message Broker");
             }
@@ -54,7 +54,7 @@ namespace BukaToko.AsyncService
         private void SendMessage(string message)
         {
             var body = Encoding.UTF8.GetBytes(message);
-            _channel.BasicPublish(exchange: "trigger_wallet", routingKey: "",
+            _channel.BasicPublish(exchange: "trigger_cashout_wallet", routingKey: "",
             basicProperties: null, body: body);
             Console.WriteLine($"--> We have sent {message}");
         }

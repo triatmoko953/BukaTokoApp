@@ -15,6 +15,7 @@ namespace BukaToko.Profiles
         public OrderProfiles()
         {
             CreateMap<Order, ReadOrderDto>();
+            CreateMap<Int32,WalletPublishDto>();
         }
     }
 }

@@ -135,10 +135,10 @@ namespace BukaToko.Data
                         var walletPublishDto = new WalletPublishDto
                         {
                             Username = user.Username,
-                            Cash = totalPrice
+                            Cash = totalPrice ,
+                            Event = "CashoutWallet_NewPublished"
                         };
                         _messageBusClient.PublishNewWallet(walletPublishDto);
-
                     }
                     catch (Exception ex)
                     {
