@@ -144,6 +144,121 @@ namespace BukaToko.Data
                 }
             }
         }
+
+        public string ManagerRegister(User user)
+        {
+            // transaction
+            using (var trans = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    // tambah user
+                    var u = new User();
+                    u.Username = user.Username;
+                    u.Password = BC.HashPassword(user.Password);
+
+                    // cek apakah user sudah memiliki wallet
+                    var wallet = _context.Wallets.FirstOrDefault(w => w.Username == user.Username);
+                    if (wallet != null)
+                    {
+                        // set user wallet id dengan id wallet yang sudah ada
+                        u.WalletId = wallet.Id;
+                    }
+                    else
+                    {
+                        // buat wallet baru
+                        var newWallet = new Wallet();
+                        newWallet.Username = user.Username;
+                        newWallet.Cash = 0;
+                        _context.Wallets.Add(newWallet);
+
+                        // simpan perubahan ke database terlebih dahulu
+                        _context.SaveChanges();
+
+                        // set user wallet id dengan id wallet yang baru
+                        u.WalletId = newWallet.Id;
+                    }
+                    _context.Users.Add(u);
+                    // ambil role member
+                    var role = _context.Roles.Where(o => o.Name == "Manager").FirstOrDefault();
+                    if (role == null)
+                    {
+                        throw new Exception("role is null");
+                    }
+                    // assign role ke user
+                    var ur = new UserRole();
+                    ur.User = u;
+                    ur.Role = role;
+                    _context.UserRoles.Add(ur);
+                    // simpan dan commit
+                    _context.SaveChanges();
+                    trans.Commit();
+                    return "Register sukses";
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                    return "Register gagal";
+                }
+            }
+        }
+        public string RegisterAdmin(User user)
+        {
+            // transaction
+            using (var trans = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    // tambah user
+                    var u = new User();
+                    u.Username = user.Username;
+                    u.Password = BC.HashPassword(user.Password);
+
+                    // cek apakah user sudah memiliki wallet
+                    var wallet = _context.Wallets.FirstOrDefault(w => w.Username == user.Username);
+                    if (wallet != null)
+                    {
+                        // set user wallet id dengan id wallet yang sudah ada
+                        u.WalletId = wallet.Id;
+                    }
+                    else
+                    {
+                        // buat wallet baru
+                        var newWallet = new Wallet();
+                        newWallet.Username = user.Username;
+                        newWallet.Cash = 0;
+                        _context.Wallets.Add(newWallet);
+
+                        // simpan perubahan ke database terlebih dahulu
+                        _context.SaveChanges();
+
+                        // set user wallet id dengan id wallet yang baru
+                        u.WalletId = newWallet.Id;
+                    }
+                    _context.Users.Add(u);
+                    // ambil role member
+                    var role = _context.Roles.Where(o => o.Name == "Admin").FirstOrDefault();
+                    if (role == null)
+                    {
+                        throw new Exception("role is null");
+                    }
+                    // assign role ke user
+                    var ur = new UserRole();
+                    ur.User = u;
+                    ur.Role = role;
+                    _context.UserRoles.Add(ur);
+                    // simpan dan commit
+                    _context.SaveChanges();
+                    trans.Commit();
+                    return "Register sukses";
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                    return "Register gagal";
+                }
+            }
+        }
         public bool SaveChanges()
         {
             return (_context.SaveChanges() >= 0);

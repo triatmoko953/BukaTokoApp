@@ -39,7 +39,16 @@ namespace BukaToko.Controllers
 
             return Ok("Registrasi sukses");
         }
-        
+        [HttpPost("RegisterManager")]
+        public async Task<IActionResult> RegisterManager(RegisterUserDto registerUserDto)
+        {
+            var user = _mapper.Map<User>(registerUserDto);
+            _userRepo.Register(user);
+            _userRepo.SaveChanges();
+
+            return Ok("Registrasi sukses");
+        }
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginUserDto loginUserDto)
         {
