@@ -114,7 +114,7 @@ namespace BukaToko.Data
                             if((product.Stock - item.Quantity)<0) throw new Exception("insufficient stock");
 
                             //kuraingin stok barang
-                            totalPrice += product.Price;
+                            totalPrice += product.Price * item.Quantity;
                             product.Stock -= item.Quantity;
                             await _context.SaveChangesAsync();
                         }
