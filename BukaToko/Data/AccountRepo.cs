@@ -145,7 +145,7 @@ namespace BukaToko.Data
             }
         }
 
-        public string ManagerRegister(User user)
+        public string RegisterManager(User user)
         {
             // transaction
             using (var trans = _context.Database.BeginTransaction())
