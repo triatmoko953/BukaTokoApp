@@ -138,6 +138,7 @@ namespace BukaToko.Data
                             Cash = totalPrice ,
                             Event = "CashoutWallet_NewPublished"
                         };
+                        walletPublishDto.Event = "Wallet_Published";
                         _messageBusClient.PublishNewWallet(walletPublishDto);
                     }
                     catch (Exception ex)

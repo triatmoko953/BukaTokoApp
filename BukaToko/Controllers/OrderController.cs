@@ -153,6 +153,8 @@ namespace BukaToko.Controllers
                 var readWallet = await _orderRepo.GetUserId(user);
                 var walletPublishedDto = _mapper.Map<WalletPublishDto>(readWallet);
                 //_messageBusClient.PublishNewWallet(walletPublishedDto);
+                _messageBusClient.PublishNewWallet(walletPublishedDto);
+                _messageBusClient.PublishNewWallet(walletPublishedDto);
                 return Ok();
             }
             catch (Exception ex)
