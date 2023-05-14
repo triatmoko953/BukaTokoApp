@@ -9,6 +9,8 @@ namespace BukaToko.DTOS
     public class ReadProductDto
     {
         [Required]
+        public int Id { get; set; }
+        [Required]
         public string Name { get; set; }
         [Required]
         public int Stock { get; set; }
