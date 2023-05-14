@@ -21,6 +21,7 @@ namespace BukaToko.Controllers
             _walletRepo = walletRepo;
             _mapper = mapper;
         }
+        [Authorize(Roles = "Manager")]
         [HttpGet]
         public async Task<IActionResult> GetAllWallets()
         {
